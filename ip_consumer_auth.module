@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Provides an IP Consumer authentication provider.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function ip_consumer_auth_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the ip_consumer_auth module.
+    case 'help.page.ip_consumer_auth':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('IP Consumer Auth') . '</p>';
+      return $output;
+    break;
+  }
+}
+

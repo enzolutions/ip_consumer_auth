@@ -1,0 +1,7 @@
+name: 'Request Consumer Authentication'
+type: module
+description: 'Provides a Request Origin Authentication'
+package: Web services
+version: VERSION
+core: 8.x
+configure: ip_consumer_auth.consumers_form
