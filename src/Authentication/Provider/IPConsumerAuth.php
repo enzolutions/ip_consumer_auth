@@ -84,7 +84,7 @@ class IPConsumerAuth implements AuthenticationProviderInterface {
     $ips = explode( "\n", $allowed_ip_consumers );
     $consumer_ip = $request->getClientIp(TRUE);
     if (in_array($consumer_ip, $ips)) {
-      // Return Annonymous user
+      // Return Anonymous user
       return $this->entityManager->getStorage('user')->load(0);
     }
     else{
