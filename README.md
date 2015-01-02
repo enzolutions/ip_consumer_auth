@@ -6,6 +6,8 @@ This idea is enable anonymous user access to Drupal 8 REST Resources using their
 
 This module enable an UI to add a whiles list of IP consumers.
 
+Module generated using [Drupal Console](http://drupalconsole.com)
+
 #Usage
 
 Using the contrib module <a href="https://www.drupal.org/project/restui/git-instructions" target="_blank">Rest UI</a> (I recommend to use the git version until Drupal 8 get a first release) you can enable REST Resources using the Authentication Provier **ip_consumer_auth as you can see in the following image.
