@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
- * HTTP Basic authentication provider.
+ * IP Consumer authentication provider.
  */
 class IPConsumerAuth implements AuthenticationProviderInterface {
 
@@ -81,7 +81,7 @@ class IPConsumerAuth implements AuthenticationProviderInterface {
    */
   public function authenticate(Request $request) {
     $allowed_ip_consumers = $this->configFactory->get('ip_consumer_auth.consumers_form_config')->get('allowed_ip_consumers');
-    $ips = explode( "\n", $allowed_ip_consumers );
+    $ips = array_map('trim', explode( "\n", $allowed_ip_consumers));
     $consumer_ip = $request->getClientIp(TRUE);
     if (in_array($consumer_ip, $ips)) {
       // Return Anonymous user
