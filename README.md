@@ -1,5 +1,4 @@
 #IP Consumer Auth
-================
 
 Drupal 8 custom Authentication Provider using an IP Consumer While List
 
