@@ -20,6 +20,14 @@ class ConsumersForm extends ConfigFormBase
     return 'consumers_form';
   }
 
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return ['ip_consumer_auth.consumers_form_config'];
+  }
+
   /**
    * {@inheritdoc}
    */
