@@ -10,7 +10,7 @@ Module generated using [Drupal Console](http://drupalconsole.com)
 
 #Usage
 
-Using the contrib module <a href="https://www.drupal.org/project/restui/git-instructions" target="_blank">Rest UI</a> (I recommend to use the git version until Drupal 8 get a first release) you can enable REST Resources using the Authentication Provier **ip_consumer_auth as you can see in the following image.
+Using the contrib module <a href="https://www.drupal.org/project/restui/git-instructions" target="_blank">Rest UI</a> (I recommend to use the git version until Drupal 8 get a first release) you can enable REST Resources using the Authentication Provider **ip_consumer_auth as you can see in the following image.
 
 ![REST UI](https://github.com/enzolutions/ip_consumer_auth/blob/master/images/custom_authentication_provider.png "REST UI")
 
