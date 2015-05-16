@@ -72,8 +72,9 @@ class IPConsumerAuth implements AuthenticationProviderInterface {
    * {@inheritdoc}
    */
   public function applies(Request $request) {
-    // If Authentication Provider is enabled always apply
-    return TRUE;
+    // Return false because if TRUE is returned the Drupal logged out users logged in.
+    // To Do: Request to remove this method for Rest Resources authentication
+    return FALSE;
   }
 
   /**

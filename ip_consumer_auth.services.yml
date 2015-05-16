@@ -3,7 +3,7 @@ services:
     class: Drupal\ip_consumer_auth\Authentication\Provider\IPConsumerAuth
     arguments: ['@config.factory', '@entity.manager']
     tags:
-      - { name: authentication_provider, priority: 100 }
+      - { name: authentication_provider, provider_id: ip_consumer_auth, priority: 100 }
 
 
 
