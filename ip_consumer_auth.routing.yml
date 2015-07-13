@@ -2,7 +2,7 @@ ip_consumer_auth.consumers_form:
   path: '/ip_consumer_auth/settings/ConsumersForm'
   defaults:
     _form: '\Drupal\ip_consumer_auth\Form\ConsumersForm'
-    _title: 'Allowed IP Consumers Auth'
+    _title: 'IP Consumers Auth'
   requirements:
     _permission: 'access administration pages'
 

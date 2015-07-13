@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
- * IP Consumer authentication provider.
+ * HTTP Basic authentication provider.
  */
 class IPConsumerAuth implements AuthenticationProviderInterface {
 
@@ -72,25 +72,48 @@ class IPConsumerAuth implements AuthenticationProviderInterface {
    * {@inheritdoc}
    */
   public function applies(Request $request) {
-    // Return false because if TRUE is returned the Drupal logged out users logged in.
-    // To Do: Request to remove this method for Rest Resources authentication
-    return FALSE;
+    // Only apply this validation if request has a valid accept value
+    $config = $this->configFactory->get('ip_consumer_auth.consumers_form_config');
+    if(strstr($request->headers->get('Accept'),$config->get('accept'))) {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function authenticate(Request $request) {
-    $allowed_ip_consumers = $this->configFactory->get('ip_consumer_auth.consumers_form_config')->get('allowed_ip_consumers');
-    $ips = array_map('trim', explode( "\n", $allowed_ip_consumers));
+    $config = $this->configFactory->get('ip_consumer_auth.consumers_form_config');
+    $ip_consumers = $config->get('ip_consumers');
+    // Determine if list of IP is a white list or black list
+    $type = $config->get('list_type');
+    $ips = array_map('trim', explode( "\n", $ip_consumers));
     $consumer_ip = $request->getClientIp(TRUE);
-    if (in_array($consumer_ip, $ips)) {
-      // Return Anonymous user
-      return $this->entityManager->getStorage('user')->load(0);
+
+    // White list logic
+    if($type) {
+      if (in_array($consumer_ip, $ips)) {
+        // Return Anonymous user
+        return $this->entityManager->getStorage('user')->load(0);
+      }
+      else{
+        throw new AccessDeniedHttpException();
+        return null;
+      }
     }
-    else{
-      throw new AccessDeniedHttpException();
-      return null;
+    // Black list logic
+    else {
+      if (!in_array($consumer_ip, $ips)) {
+        // Return Anonymous user
+        return $this->entityManager->getStorage('user')->load(0);
+      }
+      else{
+        throw new AccessDeniedHttpException();
+        return null;
+      }
     }
   }
 
