@@ -9,6 +9,7 @@ namespace Drupal\ip_consumer_auth\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 
 class ConsumersForm extends ConfigFormBase
 {
@@ -48,14 +49,32 @@ class ConsumersForm extends ConfigFormBase
       '#required' => TRUE
     );
 
-    $form['accept'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('IP Consumers'),
-      '#description' => $this->t("HTTP Accept used to determine if Authetincation provider applies i.e 'application/json'"),
-      '#default_value' => $config->get('accept'),
+    $serializedFormats = $this->getSerializerFormats();
+    $form['format'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Format'),
+      '#description' => $this->t("Select a format filter to determine if Authetincation provider applies i.e 'json'"),
+      '#default_value' => $config->get('format'),
+      '#options' => $serializedFormats,
     ];
 
     return parent::buildForm($form, $form_state);
+  }
+
+  protected function getSerializerFormats()
+  {
+    try {
+      $serializedFormats = \Drupal::getContainer()->getParameter('serializer.formats');
+      return array_combine($serializedFormats, $serializedFormats);
+    } catch (ParameterNotFoundException $e) {
+      drupal_set_message(
+          sprintf(
+            '%s %s',
+            $e->getMessage(),
+            $this->t('Please, install module "RESTful Web Services"')
+          ),
+          'error');
+    }
   }
 
   /**
@@ -74,7 +93,7 @@ class ConsumersForm extends ConfigFormBase
     $config = \Drupal::configFactory()->getEditable('ip_consumer_auth.consumers_form_config');
     $config->set('ip_consumers', $form_state->getValue('ip_consumers'));
     $config->set('list_type', $form_state->getValue('list_type'));
-    $config->set('accept', $form_state->getValue('accept'));
+    $config->set('format', $form_state->getValue('format'));
     $config->save();
   }
 }

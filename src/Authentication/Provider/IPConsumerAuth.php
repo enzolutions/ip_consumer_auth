@@ -10,7 +10,7 @@ namespace Drupal\ip_consumer_auth\Authentication\Provider;
 use \Drupal\Component\Utility\String;
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\user\UserAuthInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,11 +45,11 @@ class IPConsumerAuth implements AuthenticationProviderInterface {
   protected $flood;
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * Constructs a HTTP basic authentication provider object.
@@ -60,12 +60,12 @@ class IPConsumerAuth implements AuthenticationProviderInterface {
    *   The user authentication service.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity manager service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager) {
     $this->configFactory = $config_factory;
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -74,7 +74,7 @@ class IPConsumerAuth implements AuthenticationProviderInterface {
   public function applies(Request $request) {
     // Only apply this validation if request has a valid accept value
     $config = $this->configFactory->get('ip_consumer_auth.consumers_form_config');
-    if(strstr($request->headers->get('Accept'),$config->get('accept'))) {
+    if(strstr($request->headers->get('Accept'),$config->get('format'))) {
       return TRUE;
     }
     else {
@@ -97,7 +97,7 @@ class IPConsumerAuth implements AuthenticationProviderInterface {
     if($type) {
       if (in_array($consumer_ip, $ips)) {
         // Return Anonymous user
-        return $this->entityManager->getStorage('user')->load(0);
+        return $this->entityTypeManager->getStorage('user')->load(0);
       }
       else{
         throw new AccessDeniedHttpException();
@@ -108,7 +108,7 @@ class IPConsumerAuth implements AuthenticationProviderInterface {
     else {
       if (!in_array($consumer_ip, $ips)) {
         // Return Anonymous user
-        return $this->entityManager->getStorage('user')->load(0);
+        return $this->entityTypeManager->getStorage('user')->load(0);
       }
       else{
         throw new AccessDeniedHttpException();
